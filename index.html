@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GAME 3D</title>
+</head>
+<body>
+<canvas id = "canvas"></canvas>
+<style type="text/css">
+  #canvas{
+    border:1px solid black;
+  }
+</style>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+<script type="text/javascript">
+	window.onload = function(){
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		var canvas = document.getElementById("canvas");
+        
+        var up = 0;
+		var left = 0;
+		var right = 0;
+		var down = 0;
+        var texture; 
+        var loader;
+
+		canvas.setAttribute("width",width);
+		canvas.setAttribute("height",height);
+
+        var renderer = new THREE.WebGLRenderer({canvas: canvas});
+        renderer.setClearColor(0x000000);
+
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(45,width/height,0.1,5000);
+        camera.position.set(0,0,1000);
+        
+        var light = new THREE.AmbientLight(0xffffff);
+        scene.add(light);
+
+        var geometry = new THREE.CubeGeometry(300,300,300);
+        var loader = new THREE.TextureLoader();
+        var material = new THREE.MeshBasicMaterial({map:loader.load("https://3dfox.ru/wp-content/uploads/catablog/originals/yachik3.jpg")});
+
+        for(i = 0;i < geometry.faces.length;i++){
+        	geometry.faces[i].color.setRGB(Math.random(),Math.random(),Math.random());
+        }
+        var mesh = new THREE.Mesh(geometry,material);
+
+        scene.add(mesh);
+         
+        document.addEventListener("keydown", function(e){
+          if(e.keyCode == 87){
+          	up = 1;
+          }
+
+          if(e.keyCode == 65){
+          	left = 1;
+          }
+
+          if(e.keyCode == 68){
+          	right = 1;
+          }
+
+          if(e.keyCode == 83){
+            down = 1;
+          }
+        });
+
+        document.addEventListener("keyup", function(e){
+          if(e.keyCode == 87){
+          	up = 0;
+          }
+
+          if(e.keyCode == 65){
+          	left = 0;
+          }
+
+          if(e.keyCode == 68){
+          	right = 0;
+          }
+
+          if(e.keyCode == 83){
+            down = 0;
+          }
+        });
+        function loop(){
+          renderer.render(scene,camera);
+          if(up == 1){
+          	mesh.rotation.x -= Math.PI/500;
+          }
+
+          if(left == 1){
+          	mesh.rotation.y -= Math.PI/500;
+          }
+
+          if(right == 1){
+          	mesh.rotation.y += Math.PI/500;
+          }
+
+          if(down == 1){
+          	mesh.rotation.x += Math.PI/500;
+          }
+        }
+
+        setInterval(loop,20);
+	}
+</script>
+</body>
+</html>
